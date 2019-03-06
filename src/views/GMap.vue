@@ -6,6 +6,7 @@
 
 <script>
 import firebase from "firebase";
+import { setTimeout } from "timers";
 
 export default {
   name: "GMap",
