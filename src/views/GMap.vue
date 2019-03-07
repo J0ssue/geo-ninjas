@@ -7,6 +7,7 @@
 <script>
 import firebase from "firebase";
 import { setTimeout } from "timers";
+import db from "@/firebase/init";
 
 export default {
   name: "GMap",
@@ -28,13 +29,34 @@ export default {
     }
   },
   mounted() {
+    // * Get user:
+    let user = firebase.auth().currentUser;
     //* Get user geolocation:
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         pos => {
           this.lat = pos.coords.latitude;
           this.lng = pos.coords.longitude;
-          this.renderMap();
+
+          // * find user record and then update geocoords:
+          db.collection("users")
+            .where("user_id", "==", user.uid)
+            .get()
+            .then(snapShot => {
+              snapShot.forEach(doc => {
+                db.collection("users")
+                  .doc(doc.id)
+                  .update({
+                    geolocation: {
+                      lat: pos.coords.latitude,
+                      lng: pos.coords.longitude
+                    }
+                  });
+              });
+            })
+            .then(() => {
+              this.renderMap();
+            });
         },
         err => {
           console.log(err);
