@@ -88,7 +88,7 @@ export default {
   margin-top: 60px;
 }
 
-.signup {
+.signup h2 {
   font-size: 2.4em;
 }
 
