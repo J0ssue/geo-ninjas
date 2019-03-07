@@ -9,33 +9,47 @@
       <div class="field">
         <label for="password">Password:</label>
         <input type="password" name="password" v-model="password">
-      </div>   
+      </div>
       <p class="red-text center" v-if="feedback">{{ feedback }}</p>
       <div class="field">
-        <button class="btn deep-purple center">Login</button>  
+        <button class="btn deep-purple center">Login</button>
       </div>
     </form>
   </div>
 </template>
 
 <script>
-import firebase from 'firebase';
+import firebase from "firebase";
 
 export default {
-  name: 'Login',
+  name: "Login",
   data() {
     return {
       email: null,
       password: null,
       feedback: null
-    }
+    };
   },
   methods: {
     login() {
-      
+      if (this.email && this.password) {
+        firebase
+          .auth()
+          .signInWithEmailAndPassword(this.email, this.password)
+          .then(cred => {
+            console.log(cred.user);
+            this.$router.push({ name: "GMap" });
+          })
+          .catch(err => {
+            this.feedback = err.message;
+          });
+        this.feedback = null;
+      } else {
+        this.feedback = "Please fill in both fields";
+      }
     }
   }
-}
+};
 </script>
 
 <style>
