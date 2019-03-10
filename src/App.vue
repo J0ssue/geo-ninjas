@@ -12,13 +12,13 @@ export default {
   name: "App",
   components: {
     Navbar
-  },
-  data() {
-    return {};
   }
 };
 </script>
 
 
 <style>
+body {
+  background: #ddd;
+}
 </style>

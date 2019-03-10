@@ -12,6 +12,11 @@ yarn-debug.log*
 yarn-error.log*
 firebase
 init.js
+.firebaserc
+firebase.json
+firestore.indexes.json
+firestore.rules
+package-lock.json
 
 # Editor directories and files
 .idea
