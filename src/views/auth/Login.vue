@@ -37,11 +37,12 @@ export default {
           .auth()
           .signInWithEmailAndPassword(this.email, this.password)
           .then(cred => {
-            console.log(cred.user);
             this.$router.push({ name: "GMap" });
           })
           .catch(err => {
             this.feedback = err.message;
+            this.email = null;
+            this.password = null;
           });
         this.feedback = null;
       } else {
