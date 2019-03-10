@@ -26,6 +26,7 @@
 import slugify from "slugify";
 import db from "../../firebase/init.js";
 import firebase from "firebase";
+import functions from "firebase/functions";
 
 export default {
   name: "Signup",
@@ -46,9 +47,9 @@ export default {
           remove: /[$*_+~.()'"!\-:@]/g,
           lower: true
         });
-        let ref = db.collection("users").doc(this.slug);
-        ref.get().then(doc => {
-          if (doc.exists) {
+        let checkAlias = firebase.functions().httpsCallable("checkAlias");
+        checkAlias({ slug: this.slug }).then(result => {
+          if (!result.data.unique) {
             this.feedback = "This alias already exists";
           } else {
             firebase
@@ -56,11 +57,13 @@ export default {
               .createUserWithEmailAndPassword(this.email, this.password)
               .then(cred => {
                 let { user } = cred;
-                ref.set({
-                  alias: this.alias,
-                  geoloacation: null,
-                  user_id: user.uid
-                });
+                db.collection("users")
+                  .doc(this.slug)
+                  .set({
+                    alias: this.alias,
+                    geoloacation: null,
+                    user_id: user.uid
+                  });
               })
               .then(() => {
                 this.$router.push({
